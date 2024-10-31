@@ -10,7 +10,6 @@ use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
 use Filament\Notifications\Notification;
-use Illuminate\Database\Eloquent\Builder;
 
 class PostResource extends Resource
 {
@@ -29,6 +28,13 @@ class PostResource extends Resource
                 Forms\Components\Textarea::make('content')
                     ->required()
                     ->label('Post Content'),
+
+                \Filament\Forms\Components\Select::make('category')
+                    ->label('Category')
+                    ->options(self::resolveDropdownOptions())
+                    ->searchable()
+                    ->placeholder('Select a category')
+                    ->required(),
             ]);
     }
 
@@ -43,6 +49,7 @@ class PostResource extends Resource
                 Tables\Columns\TextColumn::make('content')
                     ->label('Content')
                     ->limit(50), // Show only first 50 characters in the table
+                    
             ])
             ->filters([
                 // Add table filters if needed
@@ -80,6 +87,18 @@ class PostResource extends Resource
             'index' => Pages\ListPosts::route('/'),
             'create' => Pages\CreatePost::route('/create'),
             'edit' => Pages\EditPost::route('/{record}/edit'),
+        ];
+    }
+
+    
+    private static function resolveDropdownOptions()
+    {
+        return [
+            'technology' => 'Technology',
+            'health' => 'Health',
+            'finance' => 'Finance',
+            'education' => 'Education',
+            'entertainment' => 'Entertainment',
         ];
     }
 }
